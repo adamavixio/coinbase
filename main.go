@@ -1,7 +1,7 @@
 package coinbaseapi
 
 import (
-	"errors"
+	"fmt"
 	"log"
 	"os"
 )
@@ -14,9 +14,10 @@ const (
 )
 
 func getEnvVar(key string) string {
-	value := os.Getenv("COINBASE_KEY")
+	value := os.Getenv(key)
 	if value == "" {
-		handleError("env var error", errors.New("COINBASE_KEY not defined"))
+		err := fmt.Errorf("%s not defined", key)
+		handleError("env var error", err)
 	}
 	return value
 }
