@@ -1,4 +1,4 @@
-module github.com/adamavixio/coinbaseapi
+module github.com/adamavixio/coinbaseclient
 
 go 1.17
 

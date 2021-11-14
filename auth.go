@@ -1,4 +1,4 @@
-package coinbaseapi
+package coinbaseclient
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func executeAuthenticatedRequest(path string, body []byte, method string) []byte {
+func executeAuthenticatedRequest(method string, path string, params map[string]string, body []byte) []byte {
 	client := http.DefaultClient
 	reader := bytes.NewReader(body)
 	address := fmt.Sprintf("%s%s", url, path)
@@ -21,10 +21,13 @@ func executeAuthenticatedRequest(path string, body []byte, method string) []byte
 	r, err := http.NewRequest(method, address, reader)
 	handleError("create auth request error", err)
 
+	if params != nil {
+		appendParams(r, params)
+	}
+
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 	message := createMessage(timestamp, method, path, body)
 	signed := signMessage(message)
-	handleError("sign message error", err)
 
 	appendHeaders(r, signed, timestamp)
 	res, err := client.Do(r)
@@ -69,4 +72,12 @@ func appendHeaders(r *http.Request, signed string, timestamp string) {
 	r.Header.Add("CB-ACCESS-SIGN", signed)
 	r.Header.Add("CB-ACCESS-TIMESTAMP", timestamp)
 	r.Header.Add("CB-ACCESS-PASSPHRASE", passphrase)
+}
+
+func appendParams(r *http.Request, params map[string]string) {
+	q := r.URL.Query()
+	for k, v := range params {
+		q.Add(k, v)
+	}
+	r.URL.RawQuery = q.Encode()
 }

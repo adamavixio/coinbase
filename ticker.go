@@ -1,4 +1,4 @@
-package coinbaseapi
+package coinbaseclient
 
 import (
 	"context"

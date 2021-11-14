@@ -1,4 +1,4 @@
-package coinbaseapi
+package coinbaseclient
 
 import (
 	"encoding/json"
@@ -29,7 +29,7 @@ type Product struct {
 }
 
 func Products() []Product {
-	data := executeAuthenticatedRequest("/products", nil, get)
+	data := executeAuthenticatedRequest(get, "/products", nil, nil)
 
 	products := []Product{}
 	if err := json.Unmarshal(data, &products); err != nil {
