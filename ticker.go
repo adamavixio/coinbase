@@ -7,24 +7,6 @@ import (
 	"nhooyr.io/websocket"
 )
 
-type Subscription struct {
-	Type       string   `json:"type"`
-	ProductIDs []string `json:"product_ids"`
-	Channels   []string `json:"channels"`
-}
-
-func newSubscription() *Subscription {
-	return &Subscription{
-		Type:       "subscribe",
-		ProductIDs: USDProductIDs(),
-		Channels:   []string{"ticker"},
-	}
-}
-
-func (s *Subscription) toJSON() ([]byte, error) {
-	return json.Marshal(s)
-}
-
 type Ticker struct {
 	Type      string `json:"type"`
 	TradeId   int64  `json:"trade_id"`
@@ -63,4 +45,22 @@ func ReadTicker(client *websocket.Conn) *Ticker {
 	}
 
 	return data
+}
+
+type Subscription struct {
+	Type       string   `json:"type"`
+	ProductIDs []string `json:"product_ids"`
+	Channels   []string `json:"channels"`
+}
+
+func newSubscription() *Subscription {
+	return &Subscription{
+		Type:       "subscribe",
+		ProductIDs: USDProductIDs(),
+		Channels:   []string{"ticker"},
+	}
+}
+
+func (s *Subscription) toJSON() ([]byte, error) {
+	return json.Marshal(s)
 }
