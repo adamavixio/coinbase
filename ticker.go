@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
+	logger "github.com/adamavixio/logger"
 	"nhooyr.io/websocket"
 )
 
@@ -23,13 +24,13 @@ type Ticker struct {
 func StartTicker() *websocket.Conn {
 	ctx := context.Background()
 	client, _, err := websocket.Dial(ctx, socket, nil)
-	handleError("coinbase websocket dial error", err)
+	logger.HandleError("coinbase websocket dial error", err)
 
 	subscription, err := newSubscription().toJSON()
-	handleError("subscription error", err)
+	logger.HandleError("subscription error", err)
 
 	if err := client.Write(ctx, websocket.MessageText, subscription); err != nil {
-		handleError("coinbase websocket write error", err)
+		logger.HandleError("coinbase websocket write error", err)
 	}
 
 	return client
@@ -37,11 +38,11 @@ func StartTicker() *websocket.Conn {
 
 func ReadTicker(client *websocket.Conn) *Ticker {
 	_, bytes, err := client.Read(context.Background())
-	handleError("coinbase websocket reading error", err)
+	logger.HandleError("coinbase websocket reading error", err)
 
 	data := &Ticker{}
 	if err := json.Unmarshal(bytes, data); err != nil {
-		handleError("coinbase websocket reading error: %v", err)
+		logger.HandleError("coinbase websocket reading error: %v", err)
 	}
 
 	return data

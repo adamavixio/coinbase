@@ -3,6 +3,8 @@ package coinbaseclient
 import (
 	"encoding/json"
 	"strings"
+
+	logger "github.com/adamavixio/logger"
 )
 
 type Product struct {
@@ -33,7 +35,7 @@ func Products() []Product {
 
 	products := []Product{}
 	if err := json.Unmarshal(data, &products); err != nil {
-		handleError("coinbase product unmarshal error", err)
+		logger.HandleError("coinbase product unmarshal error", err)
 	}
 
 	return products

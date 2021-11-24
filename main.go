@@ -2,8 +2,9 @@ package coinbaseclient
 
 import (
 	"fmt"
-	"log"
 	"os"
+
+	logger "github.com/adamavixio/logger"
 )
 
 const (
@@ -17,13 +18,7 @@ func getEnvVar(key string) string {
 	value := os.Getenv(key)
 	if value == "" {
 		err := fmt.Errorf("%s not defined", key)
-		handleError("env var error", err)
+		logger.HandleError("env var error", err)
 	}
 	return value
-}
-
-func handleError(message string, err error) {
-	if err != nil {
-		log.Fatalf("%s: %v", message, err)
-	}
 }
