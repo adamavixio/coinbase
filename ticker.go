@@ -9,16 +9,16 @@ import (
 )
 
 type Ticker struct {
-	Type      string `json:"type"`
-	TradeId   int64  `json:"trade_id"`
-	Sequence  int64  `json:"sequence"`
-	Time      string `json:"time"`
-	ProductId string `json:"product_id"`
-	Price     string `json:"price"`
-	Side      string `json:"side"`
-	LastSize  string `json:"last_size"`
-	BestBid   string `json:"best_bid"`
-	BestAsk   string `json:"best_ask"`
+	Type      string `json:"type" bson:"type"`
+	TradeId   int64  `json:"trade_id" bson:"trade_id"`
+	Sequence  int64  `json:"sequence" bson:"sequence"`
+	Time      string `json:"time" bson:"time"`
+	ProductId string `json:"product_id" bson:"product_id"`
+	Price     string `json:"price" bson:"price"`
+	Side      string `json:"side" bson:"side"`
+	LastSize  string `json:"last_size" bson:"last_size"`
+	BestBid   string `json:"best_bid" bson:"best_bid"`
+	BestAsk   string `json:"best_ask" bson:"best_ask"`
 }
 
 func StartTicker() *websocket.Conn {
