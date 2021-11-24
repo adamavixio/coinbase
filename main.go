@@ -18,7 +18,7 @@ func getEnvVar(key string) string {
 	value := os.Getenv(key)
 	if value == "" {
 		err := fmt.Errorf("%s not defined", key)
-		logger.HandleError("env var error", err)
+		logger.Error("env var error", err)
 	}
 	return value
 }

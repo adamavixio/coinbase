@@ -24,24 +24,24 @@ type Ticker struct {
 func StartTicker() *websocket.Conn {
 	ctx := context.Background()
 	client, _, err := websocket.Dial(ctx, socket, nil)
-	logger.HandleError("coinbase websocket dial error", err)
+	logger.Error("coinbase websocket dial error", err)
 
 	subscription, err := newSubscription().toJSON()
-	logger.HandleError("subscription error", err)
+	logger.Error("subscription error", err)
 
 	err = client.Write(ctx, websocket.MessageText, subscription)
-	logger.HandleError("coinbase websocket write error", err)
+	logger.Error("coinbase websocket write error", err)
 
 	return client
 }
 
 func ReadTicker(client *websocket.Conn) *Ticker {
 	_, bytes, err := client.Read(context.Background())
-	logger.HandleError("coinbase websocket reading error", err)
+	logger.Error("coinbase websocket reading error", err)
 
 	data := &Ticker{}
 	err = json.Unmarshal(bytes, data)
-	logger.HandleError("coinbase websocket reading error: %v", err)
+	logger.Error("coinbase websocket reading error: %v", err)
 
 	return data
 }

@@ -21,7 +21,7 @@ func executeAuthenticatedRequest(method string, path string, params map[string]s
 	address := fmt.Sprintf("%s%s", url, path)
 
 	r, err := http.NewRequest(method, address, reader)
-	logger.HandleError("create auth request error", err)
+	logger.Error("create auth request error", err)
 
 	if params != nil {
 		appendParams(r, params)
@@ -33,10 +33,10 @@ func executeAuthenticatedRequest(method string, path string, params map[string]s
 
 	appendHeaders(r, signed, timestamp)
 	res, err := client.Do(r)
-	logger.HandleError("execute client request error", err)
+	logger.Error("execute client request error", err)
 
 	data, err := ioutil.ReadAll(res.Body)
-	logger.HandleError("request body parsing error", err)
+	logger.Error("request body parsing error", err)
 
 	return data
 }
@@ -54,11 +54,11 @@ func signMessage(message string) string {
 	secret := getEnvVar("COINBASE_SECRET")
 
 	key, err := base64.StdEncoding.DecodeString(secret)
-	logger.HandleError("error base64 decoding secret error", err)
+	logger.Error("error base64 decoding secret error", err)
 
 	hmac := hmac.New(sha256.New, key)
 	_, err = hmac.Write([]byte(message))
-	logger.HandleError("hmac message write error", err)
+	logger.Error("hmac message write error", err)
 
 	sha := base64.StdEncoding.EncodeToString(hmac.Sum(nil))
 	return sha

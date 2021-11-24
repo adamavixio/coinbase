@@ -35,7 +35,7 @@ func Products() []Product {
 
 	products := []Product{}
 	err := json.Unmarshal(data, &products)
-	logger.HandleError("coinbase product unmarshal error", err)
+	logger.Error("coinbase product unmarshal error", err)
 
 	return products
 }
