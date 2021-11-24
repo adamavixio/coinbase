@@ -29,9 +29,8 @@ func StartTicker() *websocket.Conn {
 	subscription, err := newSubscription().toJSON()
 	logger.HandleError("subscription error", err)
 
-	if err := client.Write(ctx, websocket.MessageText, subscription); err != nil {
-		logger.HandleError("coinbase websocket write error", err)
-	}
+	err = client.Write(ctx, websocket.MessageText, subscription)
+	logger.HandleError("coinbase websocket write error", err)
 
 	return client
 }
@@ -41,9 +40,8 @@ func ReadTicker(client *websocket.Conn) *Ticker {
 	logger.HandleError("coinbase websocket reading error", err)
 
 	data := &Ticker{}
-	if err := json.Unmarshal(bytes, data); err != nil {
-		logger.HandleError("coinbase websocket reading error: %v", err)
-	}
+	err = json.Unmarshal(bytes, data)
+	logger.HandleError("coinbase websocket reading error: %v", err)
 
 	return data
 }

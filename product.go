@@ -34,9 +34,8 @@ func Products() []Product {
 	data := executeAuthenticatedRequest(get, "/products", nil, nil)
 
 	products := []Product{}
-	if err := json.Unmarshal(data, &products); err != nil {
-		logger.HandleError("coinbase product unmarshal error", err)
-	}
+	err := json.Unmarshal(data, &products)
+	logger.HandleError("coinbase product unmarshal error", err)
 
 	return products
 }
