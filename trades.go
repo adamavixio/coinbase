@@ -17,9 +17,9 @@ type Trade struct {
 
 func Trades(productID string, after string) []Trade {
 	config := RequestConfig{
-		Method:  get,
-		Path:    fmt.Sprintf("/products/%s/trades", productID),
-		Headers: map[string]string{"CB_AFTER": after},
+		Method: get,
+		Path:   fmt.Sprintf("/products/%s/trades", productID),
+		Params: map[string]string{"after": after},
 	}
 
 	data := executeAuthenticatedRequest(config)
