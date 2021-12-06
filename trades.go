@@ -15,9 +15,9 @@ type Trade struct {
 	Side    string `json:"side"`
 }
 
-func Trades(productID string, after string) []Trade {
+func Trades(productID string, before string) []Trade {
 	params := map[string]string{}
-	params["after"] = after
+	params["before"] = before
 
 	path := fmt.Sprintf("/products/%s/trades", productID)
 	data := executeAuthenticatedRequest(get, path, params, nil)
