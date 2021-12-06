@@ -8,11 +8,11 @@ import (
 )
 
 type Trade struct {
-	Time    string `json:"time"`
-	TradeID int64  `json:"trade_id"`
-	Price   string `json:"price"`
-	Size    string `json:"size"`
-	Side    string `json:"side"`
+	Time    string `json:"time" bson:"time"`
+	TradeID int64  `json:"trade_id" bson:"trade_id"`
+	Price   string `json:"price" bson:"price"`
+	Size    string `json:"size" bson:"size"`
+	Side    string `json:"side" bson:"side"`
 }
 
 func Trades(productID string, after string) []Trade {
