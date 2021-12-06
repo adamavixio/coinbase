@@ -2,7 +2,7 @@ package coinbaseclient
 
 import (
 	"encoding/json"
-	"strings"
+	"regexp"
 
 	logger "github.com/adamavixio/logger"
 )
@@ -48,9 +48,11 @@ func Products() []Product {
 func USDProductIDs() []string {
 	products := Products()
 
+	regex := regexp.MustCompile(`USD$`)
 	ids := []string{}
+
 	for _, product := range products {
-		if strings.Contains(product.ID, "USD") {
+		if regex.MatchString(product.ID) {
 			ids = append(ids, product.ID)
 		}
 	}
