@@ -3,8 +3,6 @@ package coinbaseclient
 import (
 	"encoding/json"
 	"regexp"
-
-	logger "github.com/adamavixio/logger"
 )
 
 type Product struct {
@@ -30,23 +28,32 @@ type Product struct {
 	AuctionMode           bool   `json:"auction_mode"`
 }
 
-func Products() []Product {
+func Products() ([]Product, error) {
 	config := RequestConfig{
 		Method: get,
 		Path:   "/products",
 	}
 
-	data := executeAuthenticatedRequest(config)
+	data, err := executeAuthenticatedRequest(config)
+	if err != nil {
+		return nil, err
+	}
 
 	products := []Product{}
-	err := json.Unmarshal(data, &products)
-	logger.Error("coinbase product unmarshal error", err)
 
-	return products
+	err = json.Unmarshal(data, &products)
+	if err != nil {
+		return nil, err
+	}
+
+	return products, err
 }
 
-func USDProductIDs() []string {
-	products := Products()
+func USDProductIDs() ([]string, error) {
+	products, err := Products()
+	if err != nil {
+		return nil, err
+	}
 
 	regex := regexp.MustCompile(`USD$`)
 	ids := []string{}
@@ -57,5 +64,5 @@ func USDProductIDs() []string {
 		}
 	}
 
-	return ids
+	return ids, nil
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 
-	logger "github.com/adamavixio/logger"
 	"nhooyr.io/websocket"
 )
 
@@ -21,29 +20,46 @@ type Ticker struct {
 	BestAsk   string `json:"best_ask" bson:"best_ask"`
 }
 
-func StartTicker() *websocket.Conn {
+func StartTicker() (*websocket.Conn, error) {
 	ctx := context.Background()
+
 	client, _, err := websocket.Dial(ctx, socket, nil)
-	logger.Error("coinbase websocket dial error", err)
+	if err != nil {
+		return nil, err
+	}
 
-	subscription, err := newSubscription().toJSON()
-	logger.Error("subscription error", err)
+	subscription, err := newSubscription()
+	if err != nil {
+		return nil, err
+	}
 
-	err = client.Write(ctx, websocket.MessageText, subscription)
-	logger.Error("coinbase websocket write error", err)
+	bytes, err := subscription.toJSON()
+	if err != nil {
+		return nil, err
+	}
 
-	return client
+	err = client.Write(ctx, websocket.MessageText, bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return client, nil
 }
 
-func ReadTicker(client *websocket.Conn) *Ticker {
+func ReadTicker(client *websocket.Conn) (*Ticker, error) {
 	_, bytes, err := client.Read(context.Background())
-	logger.Error("coinbase websocket reading error", err)
+	if err != nil {
+		return nil, err
+	}
 
 	data := &Ticker{}
-	err = json.Unmarshal(bytes, data)
-	logger.Error("coinbase websocket reading error: %v", err)
 
-	return data
+	err = json.Unmarshal(bytes, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 type Subscription struct {
@@ -52,12 +68,19 @@ type Subscription struct {
 	Channels   []string `json:"channels"`
 }
 
-func newSubscription() *Subscription {
-	return &Subscription{
+func newSubscription() (*Subscription, error) {
+	productIDs, err := USDProductIDs()
+	if err != nil {
+		return nil, err
+	}
+
+	subscription := &Subscription{
 		Type:       "subscribe",
-		ProductIDs: USDProductIDs(),
+		ProductIDs: productIDs,
 		Channels:   []string{"ticker"},
 	}
+
+	return subscription, nil
 }
 
 func (s *Subscription) toJSON() ([]byte, error) {

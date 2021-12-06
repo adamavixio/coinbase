@@ -3,8 +3,6 @@ package coinbaseclient
 import (
 	"fmt"
 	"os"
-
-	logger "github.com/adamavixio/logger"
 )
 
 const (
@@ -14,12 +12,12 @@ const (
 	socket = "wss://ws-feed.pro.coinbase.com"
 )
 
-func getEnvVar(key string) string {
+func getEnvVar(key string) (string, error) {
 	value := os.Getenv(key)
+
 	if value == "" {
-		err := fmt.Errorf("%s not defined", key)
-		logger.Error("env var error", err)
+		return "", fmt.Errorf("%s not defined", key)
 	}
 
-	return value
+	return value, nil
 }
