@@ -31,7 +31,12 @@ type Product struct {
 }
 
 func Products() []Product {
-	data := executeAuthenticatedRequest(get, "/products", nil, nil)
+	config := RequestConfig{
+		Method: get,
+		Path:   "/products",
+	}
+
+	data := executeAuthenticatedRequest(config)
 
 	products := []Product{}
 	err := json.Unmarshal(data, &products)

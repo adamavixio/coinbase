@@ -15,23 +15,31 @@ import (
 	logger "github.com/adamavixio/logger"
 )
 
-func executeAuthenticatedRequest(method string, path string, params map[string]string, body []byte) []byte {
-	client := http.DefaultClient
-	reader := bytes.NewReader(body)
-	address := fmt.Sprintf("%s%s", url, path)
+type RequestConfig struct {
+	Method  string
+	Path    string
+	Headers map[string]string
+	Params  map[string]string
+	Body    []byte
+}
 
-	r, err := http.NewRequest(method, address, reader)
+func executeAuthenticatedRequest(config RequestConfig) []byte {
+	client := http.DefaultClient
+	reader := bytes.NewReader(config.Body)
+	address := fmt.Sprintf("%s%s", url, config.Path)
+
+	r, err := http.NewRequest(config.Method, address, reader)
 	logger.Error("create auth request error", err)
 
-	if params != nil {
-		appendParams(r, params)
+	if config.Params != nil {
+		appendParams(r, config.Params)
 	}
 
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
-	message := createMessage(timestamp, method, path, body)
+	message := createMessage(timestamp, config.Method, config.Path, config.Body)
 	signed := signMessage(message)
 
-	appendHeaders(r, signed, timestamp)
+	appendHeaders(r, signed, timestamp, config.Headers)
 	res, err := client.Do(r)
 	logger.Error("execute client request error", err)
 
@@ -64,7 +72,7 @@ func signMessage(message string) string {
 	return sha
 }
 
-func appendHeaders(r *http.Request, signed string, timestamp string) {
+func appendHeaders(r *http.Request, signed, timestamp string, headers map[string]string) {
 	key := getEnvVar("COINBASE_KEY")
 	passphrase := getEnvVar("COINBASE_PASSPHRASE")
 
@@ -74,6 +82,10 @@ func appendHeaders(r *http.Request, signed string, timestamp string) {
 	r.Header.Add("CB-ACCESS-SIGN", signed)
 	r.Header.Add("CB-ACCESS-TIMESTAMP", timestamp)
 	r.Header.Add("CB-ACCESS-PASSPHRASE", passphrase)
+
+	for k, v := range headers {
+		r.Header.Add(k, v)
+	}
 }
 
 func appendParams(r *http.Request, params map[string]string) {

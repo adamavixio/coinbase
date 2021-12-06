@@ -15,12 +15,14 @@ type Trade struct {
 	Side    string `json:"side"`
 }
 
-func Trades(productID string, before string) []Trade {
-	params := map[string]string{}
-	params["before"] = before
+func Trades(productID string, after string) []Trade {
+	config := RequestConfig{
+		Method:  get,
+		Path:    fmt.Sprintf("/products/%s/trades", productID),
+		Headers: map[string]string{"CB_AFTER": after},
+	}
 
-	path := fmt.Sprintf("/products/%s/trades", productID)
-	data := executeAuthenticatedRequest(get, path, params, nil)
+	data := executeAuthenticatedRequest(config)
 
 	trades := []Trade{}
 	err := json.Unmarshal(data, &trades)
