@@ -8,6 +8,7 @@ import (
 const (
 	get    = "GET"
 	post   = "POST"
+	delete = "DELETE"
 	url    = "https://api.pro.coinbase.com"
 	socket = "wss://ws-feed.pro.coinbase.com"
 )

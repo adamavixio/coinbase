@@ -5,6 +5,10 @@ import (
 	"fmt"
 )
 
+//
+// Definitions
+//
+
 type Trade struct {
 	Time    string `json:"time,omitempty" bson:"time,omitempty"`
 	TradeID int64  `json:"trade_id,omitempty" bson:"trade_id,omitempty"`
@@ -13,7 +17,11 @@ type Trade struct {
 	Side    string `json:"side,omitempty" bson:"side,omitempty"`
 }
 
-func Trades(productID string, after string) ([]Trade, error) {
+//
+// Exports
+//
+
+func Trades(productID string, after string) ([]*Trade, error) {
 	config := RequestConfig{
 		Method: get,
 		Path:   fmt.Sprintf("/products/%s/trades", productID),
@@ -25,7 +33,7 @@ func Trades(productID string, after string) ([]Trade, error) {
 		return nil, err
 	}
 
-	trades := []Trade{}
+	trades := []*Trade{}
 
 	err = json.Unmarshal(data, &trades)
 	if err != nil {
