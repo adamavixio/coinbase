@@ -6,11 +6,11 @@ import (
 )
 
 type Trade struct {
-	Time    string `json:"time" bson:"time"`
-	TradeID int64  `json:"trade_id" bson:"trade_id"`
-	Price   string `json:"price" bson:"price"`
-	Size    string `json:"size" bson:"size"`
-	Side    string `json:"side" bson:"side"`
+	Time    string `json:"time,omitempty" bson:"time,omitempty"`
+	TradeID int64  `json:"trade_id,omitempty" bson:"trade_id,omitempty"`
+	Price   string `json:"price,omitempty" bson:"price,omitempty"`
+	Size    string `json:"size,omitempty" bson:"size,omitempty"`
+	Side    string `json:"side,omitempty" bson:"side,omitempty"`
 }
 
 func Trades(productID string, after string) ([]Trade, error) {
