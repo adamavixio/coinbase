@@ -13,6 +13,10 @@ import (
 	"time"
 )
 
+//
+// Implementation
+//
+
 type RequestConfig struct {
 	Method  string
 	Path    string
@@ -21,7 +25,7 @@ type RequestConfig struct {
 	Body    []byte
 }
 
-func executeAuthenticatedRequest(config RequestConfig) ([]byte, error) {
+func authRequest(config RequestConfig) ([]byte, error) {
 	client := http.DefaultClient
 	reader := bytes.NewReader(config.Body)
 	address := fmt.Sprintf("%s%s", url, config.Path)
@@ -101,8 +105,8 @@ func appendHeaders(r *http.Request, signed, timestamp string, headers map[string
 		return err
 	}
 
-	r.Header.Add("Accept", "application/json; charset=utf-8")
-	r.Header.Add("Content-Type", "application/json; charset=utf-8")
+	r.Header.Add("Accept", "application/json")
+	r.Header.Add("Content-Type", "application/json")
 	r.Header.Add("CB-ACCESS-KEY", key)
 	r.Header.Add("CB-ACCESS-SIGN", signed)
 	r.Header.Add("CB-ACCESS-TIMESTAMP", timestamp)

@@ -6,7 +6,7 @@ import (
 )
 
 //
-// Definitions
+// Implementation
 //
 
 type Trade struct {
@@ -18,7 +18,7 @@ type Trade struct {
 }
 
 //
-// Exports
+// API
 //
 
 func Trades(productID string, after string) ([]*Trade, error) {
@@ -28,7 +28,7 @@ func Trades(productID string, after string) ([]*Trade, error) {
 		Params: map[string]string{"after": after},
 	}
 
-	data, err := executeAuthenticatedRequest(config)
+	data, err := authRequest(config)
 	if err != nil {
 		return nil, err
 	}

@@ -8,7 +8,7 @@ import (
 )
 
 //
-// Definitions
+// Implementation
 //
 
 type Ticker struct {
@@ -50,7 +50,7 @@ func (s *Subscription) toJSON() ([]byte, error) {
 }
 
 //
-// Exports
+// API
 //
 
 func StartTicker() (*websocket.Conn, error) {

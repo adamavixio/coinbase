@@ -6,11 +6,14 @@ import (
 )
 
 const (
+	url    = "https://api.exchange.coinbase.com"
+	socket = "wss://ws-feed.pro.coinbase.com"
+
 	get    = "GET"
 	post   = "POST"
 	delete = "DELETE"
-	url    = "https://api.pro.coinbase.com"
-	socket = "wss://ws-feed.pro.coinbase.com"
+
+	USD = "USD"
 )
 
 func getEnvVar(key string) (string, error) {

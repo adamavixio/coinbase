@@ -6,7 +6,7 @@ import (
 )
 
 //
-// Definitions
+// Implementation
 //
 
 type Product struct {
@@ -33,7 +33,7 @@ type Product struct {
 }
 
 //
-// Exports
+// API
 //
 
 func Products() ([]*Product, error) {
@@ -42,7 +42,7 @@ func Products() ([]*Product, error) {
 		Path:   "/products",
 	}
 
-	data, err := executeAuthenticatedRequest(config)
+	data, err := authRequest(config)
 	if err != nil {
 		return nil, err
 	}
