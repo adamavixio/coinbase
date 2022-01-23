@@ -88,7 +88,7 @@ func USDProductIDs() ([]string, error) {
 	return ids, nil
 }
 
-func ProductTicker(config *ProductTickerConfig) (*Product, error) {
+func ProductTicker(config *ProductTickerConfig) (*Ticker, error) {
 	err := config.isValid()
 	if err != nil {
 		return nil, err
@@ -104,11 +104,11 @@ func ProductTicker(config *ProductTickerConfig) (*Product, error) {
 		return nil, err
 	}
 
-	product := &Product{}
-	err = json.Unmarshal(data, product)
+	ticker := &Ticker{}
+	err = json.Unmarshal(data, ticker)
 	if err != nil {
 		return nil, err
 	}
 
-	return product, err
+	return ticker, err
 }
