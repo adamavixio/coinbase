@@ -71,7 +71,7 @@ func AccountByCurrency(currency string) (*Account, error) {
 	return nil, fmt.Errorf("unable to find account ID for USD")
 }
 
-func AccountByID(config *AccountByIDConfig) (*Account, error) {
+func AccountByID(config *AccountByIDConfig) (*Ticker, error) {
 	err := config.isValid()
 	if err != nil {
 		return nil, err
@@ -87,12 +87,12 @@ func AccountByID(config *AccountByIDConfig) (*Account, error) {
 		return nil, err
 	}
 
-	account := &Account{}
+	ticker := &Ticker{}
 
-	err = json.Unmarshal(data, account)
+	err = json.Unmarshal(data, ticker)
 	if err != nil {
 		return nil, err
 	}
 
-	return account, nil
+	return ticker, nil
 }
