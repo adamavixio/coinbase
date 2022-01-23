@@ -2,6 +2,7 @@ package coinbaseclient
 
 import (
 	"encoding/json"
+	"fmt"
 	"regexp"
 )
 
@@ -30,6 +31,18 @@ type Product struct {
 	Status                string `json:"status,omitempty" bson:"status,omitempty"`
 	StatusMessage         string `json:"status_message,omitempty" bson:"status_message,omitempty"`
 	TradingDisabled       bool   `json:"trading_disabled,omitempty" bson:"trading_disabled,omitempty"`
+}
+
+type ProductTickerConfig struct {
+	ID string `json:"product_id"`
+}
+
+func (config *ProductTickerConfig) isValid() error {
+	if config.ID == "" {
+		return fmt.Errorf("invalid value for field ID: %s", config.ID)
+	}
+
+	return nil
 }
 
 //
@@ -73,4 +86,29 @@ func USDProductIDs() ([]string, error) {
 	}
 
 	return ids, nil
+}
+
+func ProductTicker(config *ProductTickerConfig) (*Product, error) {
+	err := config.isValid()
+	if err != nil {
+		return nil, err
+	}
+
+	request := RequestConfig{
+		Method: get,
+		Path:   fmt.Sprintf("/products/%s/ticker", config.ID),
+	}
+
+	data, err := authRequest(request)
+	if err != nil {
+		return nil, err
+	}
+
+	product := &Product{}
+	err = json.Unmarshal(data, product)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, err
 }

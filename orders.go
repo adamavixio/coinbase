@@ -41,7 +41,7 @@ type Order struct {
 	Type          string `json:"type,omitempty" bson:"type,omitempty"`
 }
 
-type GetOrders struct {
+type GetOrdersConfig struct {
 	After     string    `json:"after,omitempty" bson:"after,omitempty"`
 	Before    string    `json:"before,omitempty" bson:"before,omitempty"`
 	EndDate   time.Time `json:"end_date,omitempty" bson:"end_date,omitempty"`
@@ -54,54 +54,54 @@ type GetOrders struct {
 	Status    string    `json:"status" bson:"status"`
 }
 
-func (getOrders *GetOrders) isValid() error {
-	if getOrders.Limit <= 0 {
+func (config *GetOrdersConfig) isValid() error {
+	if config.Limit <= 0 {
 		return errors.New("productID cannot be empty")
 	}
 
-	if _, ok := statuses[getOrders.Status]; !ok {
+	if _, ok := statuses[config.Status]; !ok {
 		return errors.New("status is not valid")
 	}
 
 	return nil
 }
 
-func (getOrders *GetOrders) toMap() map[string]string {
+func (config *GetOrdersConfig) toMap() map[string]string {
 	return map[string]string{
-		"after":      getOrders.After,
-		"before":     getOrders.Before,
-		"end_date":   getOrders.EndDate.String(),
-		"limit":      fmt.Sprint(getOrders.Limit),
-		"product_id": getOrders.ProductID,
-		"profile_id": getOrders.ProfileID,
-		"sortedBy":   getOrders.SortedBy,
-		"sorting":    getOrders.Sorting,
-		"start_date": getOrders.StartDate.String(),
-		"status":     getOrders.Status,
+		"after":      config.After,
+		"before":     config.Before,
+		"end_date":   config.EndDate.String(),
+		"limit":      fmt.Sprint(config.Limit),
+		"product_id": config.ProductID,
+		"profile_id": config.ProfileID,
+		"sortedBy":   config.SortedBy,
+		"sorting":    config.Sorting,
+		"start_date": config.StartDate.String(),
+		"status":     config.Status,
 	}
 }
 
-type CancelOrders struct {
+type CancelOrdersConfig struct {
 	ProductID string `json:"product_id,omitempty" bson:"product_id,omitempty"`
 	ProfileID string `json:"profile_id,omitempty" bson:"profile_id,omitempty"`
 }
 
-func (cancelOrders *CancelOrders) isValid() error {
-	if cancelOrders.ProductID == "" {
+func (config *CancelOrdersConfig) isValid() error {
+	if config.ProductID == "" {
 		return errors.New("ProductID cannot be empty")
 	}
 
 	return nil
 }
 
-func (cancelOrders *CancelOrders) toMap() map[string]string {
+func (config *CancelOrdersConfig) toMap() map[string]string {
 	return map[string]string{
-		"profile_id": cancelOrders.ProfileID,
-		"product_id": cancelOrders.ProductID,
+		"profile_id": config.ProfileID,
+		"product_id": config.ProductID,
 	}
 }
 
-type CreateOrder struct {
+type CreateOrderConfig struct {
 	CancelAfter string `json:"cancel_after,omitempty" bson:"cancel_after,omitempty"`
 	ClientOID   string `json:"client_oid,omitempty" bson:"client_oid,omitempty"`
 	Funds       string `json:"funds,omitempty" bson:"funds,omitempty"`
@@ -118,46 +118,46 @@ type CreateOrder struct {
 	Type        string `json:"type,omitempty" bson:"type,omitempty"`
 }
 
-func (createOrder *CreateOrder) isValid() error {
-	if createOrder.ProductID == "" {
+func (config *CreateOrderConfig) isValid() error {
+	if config.ProductID == "" {
 		return errors.New("ProductID cannot be empty")
 	}
 
 	return nil
 }
 
-func (createOrder *CreateOrder) toJSON() ([]byte, error) {
-	return json.Marshal(createOrder)
+func (config *CreateOrderConfig) toJSON() ([]byte, error) {
+	return json.Marshal(config)
 }
 
-type GetOrder struct {
+type GetOrderConfig struct {
 	OrderID string `json:"order_id" bson:"order_id"`
 }
 
-func (getOrder *GetOrder) isValid() error {
-	if getOrder.OrderID == "" {
+func (config *GetOrderConfig) isValid() error {
+	if config.OrderID == "" {
 		return errors.New("orderID cannot be empty")
 	}
 
 	return nil
 }
 
-type CancelOrder struct {
+type CancelOrderConfig struct {
 	OrderID   string `json:"order_id" bson:"order_id"`
 	ProfileID string `json:"profile_id,omitempty" bson:"profile_id,omitempty"`
 }
 
-func (cancelOrder *CancelOrder) isValid() error {
-	if cancelOrder.OrderID == "" {
+func (config *CancelOrderConfig) isValid() error {
+	if config.OrderID == "" {
 		return errors.New("OrderID cannot be empty")
 	}
 
 	return nil
 }
 
-func (cancelOrder *CancelOrder) toMap() map[string]string {
+func (config *CancelOrderConfig) toMap() map[string]string {
 	return map[string]string{
-		"profile_id": cancelOrder.ProfileID,
+		"profile_id": config.ProfileID,
 	}
 }
 
@@ -165,7 +165,7 @@ func (cancelOrder *CancelOrder) toMap() map[string]string {
 // API
 //
 
-func ExecuteGetOrders(getOrders *GetOrders) ([]*Order, error) {
+func ExecuteGetOrders(getOrders *GetOrdersConfig) ([]*Order, error) {
 	err := getOrders.isValid()
 	if err != nil {
 		return nil, err
@@ -192,7 +192,7 @@ func ExecuteGetOrders(getOrders *GetOrders) ([]*Order, error) {
 	return orders, err
 }
 
-func ExecuteCancelOrders(cancelOrders *CancelOrders) ([]string, error) {
+func ExecuteCancelOrders(cancelOrders *CancelOrdersConfig) ([]string, error) {
 	err := cancelOrders.isValid()
 	if err != nil {
 		return nil, err
@@ -219,7 +219,7 @@ func ExecuteCancelOrders(cancelOrders *CancelOrders) ([]string, error) {
 	return canceledOrders, err
 }
 
-func ExecuteCreateOrder(createOrder *CreateOrder) (*Order, error) {
+func ExecuteCreateOrder(createOrder *CreateOrderConfig) (*Order, error) {
 	err := createOrder.isValid()
 	if err != nil {
 		return nil, err
@@ -251,7 +251,7 @@ func ExecuteCreateOrder(createOrder *CreateOrder) (*Order, error) {
 	return &createdOrder, err
 }
 
-func ExecuteGetOrder(getOrder *GetOrder) (*Order, error) {
+func ExecuteGetOrder(getOrder *GetOrderConfig) (*Order, error) {
 	err := getOrder.isValid()
 	if err != nil {
 		return nil, err
@@ -277,7 +277,7 @@ func ExecuteGetOrder(getOrder *GetOrder) (*Order, error) {
 	return order, err
 }
 
-func ExecuteCancelOrder(cancelOrder *CancelOrder) (*string, error) {
+func ExecuteCancelOrder(cancelOrder *CancelOrderConfig) (*string, error) {
 	err := cancelOrder.isValid()
 	if err != nil {
 		return nil, err

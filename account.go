@@ -23,9 +23,9 @@ type AccountByIDConfig struct {
 	ID string `json:"id"`
 }
 
-func (accountByIDConfig *AccountByIDConfig) isValid() error {
-	if accountByIDConfig.ID == "" {
-		return fmt.Errorf("invalid value for field ID: %s", accountByIDConfig.ID)
+func (config *AccountByIDConfig) isValid() error {
+	if config.ID == "" {
+		return fmt.Errorf("invalid value for field ID: %s", config.ID)
 	}
 
 	return nil
