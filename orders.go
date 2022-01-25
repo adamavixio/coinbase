@@ -2,7 +2,6 @@ package coinbaseclient
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
 )
@@ -56,11 +55,11 @@ type GetOrdersConfig struct {
 
 func (config *GetOrdersConfig) isValid() error {
 	if config.Limit <= 0 {
-		return errors.New("productID cannot be empty")
+		return fmt.Errorf("productID cannot be empty")
 	}
 
 	if _, ok := statuses[config.Status]; !ok {
-		return errors.New("status is not valid")
+		return fmt.Errorf("status is not valid")
 	}
 
 	return nil
@@ -88,7 +87,7 @@ type CancelOrdersConfig struct {
 
 func (config *CancelOrdersConfig) isValid() error {
 	if config.ProductID == "" {
-		return errors.New("ProductID cannot be empty")
+		return fmt.Errorf("ProductID cannot be empty")
 	}
 
 	return nil
@@ -120,7 +119,11 @@ type CreateOrderConfig struct {
 
 func (config *CreateOrderConfig) isValid() error {
 	if config.ProductID == "" {
-		return errors.New("ProductID cannot be empty")
+		return fmt.Errorf("productID cannot be empty")
+	}
+
+	if config.Side == "" {
+		return fmt.Errorf("side cannot be empty")
 	}
 
 	return nil
@@ -136,7 +139,7 @@ type GetOrderConfig struct {
 
 func (config *GetOrderConfig) isValid() error {
 	if config.OrderID == "" {
-		return errors.New("orderID cannot be empty")
+		return fmt.Errorf("orderID cannot be empty")
 	}
 
 	return nil
@@ -149,7 +152,7 @@ type CancelOrderConfig struct {
 
 func (config *CancelOrderConfig) isValid() error {
 	if config.OrderID == "" {
-		return errors.New("OrderID cannot be empty")
+		return fmt.Errorf("OrderID cannot be empty")
 	}
 
 	return nil
