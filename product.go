@@ -88,7 +88,7 @@ func USDProductIDs() ([]string, error) {
 	return ids, nil
 }
 
-func ProductTicker(config *ProductTickerConfig) (*Ticker, error) {
+func SingleProduct(config *ProductTickerConfig) (*Ticker, error) {
 	err := config.isValid()
 	if err != nil {
 		return nil, err
