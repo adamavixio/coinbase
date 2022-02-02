@@ -96,6 +96,31 @@ func SingleProduct(config *ProductTickerConfig) (*Product, error) {
 
 	request := RequestConfig{
 		Method: get,
+		Path:   fmt.Sprintf("/products/%s", config.ID),
+	}
+
+	data, err := authRequest(request)
+	if err != nil {
+		return nil, err
+	}
+
+	product := &Product{}
+	err = json.Unmarshal(data, product)
+	if err != nil {
+		return nil, err
+	}
+
+	return product, err
+}
+
+func ProductTicker(config *ProductTickerConfig) (*Ticker, error) {
+	err := config.isValid()
+	if err != nil {
+		return nil, err
+	}
+
+	request := RequestConfig{
+		Method: get,
 		Path:   fmt.Sprintf("/products/%s/ticker", config.ID),
 	}
 
