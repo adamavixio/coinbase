@@ -45,6 +45,18 @@ func (config *ProductTickerConfig) isValid() error {
 	return nil
 }
 
+type SingleProductConfig struct {
+	ID string `json:"product_id"`
+}
+
+func (config *SingleProductConfig) isValid() error {
+	if config.ID == "" {
+		return fmt.Errorf("invalid value for field ID: %s", config.ID)
+	}
+
+	return nil
+}
+
 //
 // API
 //
@@ -88,7 +100,7 @@ func USDProductIDs() ([]string, error) {
 	return ids, nil
 }
 
-func SingleProduct(config *ProductTickerConfig) (*Product, error) {
+func SingleProduct(config *SingleProductConfig) (*Product, error) {
 	err := config.isValid()
 	if err != nil {
 		return nil, err
