@@ -1,4 +1,4 @@
-package coinbaseclient
+package client
 
 import (
 	"bytes"
@@ -13,11 +13,7 @@ import (
 	"time"
 )
 
-//
-// Implementation
-//
-
-type RequestConfig struct {
+type requestConfig struct {
 	Method  string
 	Path    string
 	Headers map[string]string
@@ -25,7 +21,7 @@ type RequestConfig struct {
 	Body    []byte
 }
 
-func authRequest(config RequestConfig) ([]byte, error) {
+func authRequest(config requestConfig) ([]byte, error) {
 	client := http.DefaultClient
 	reader := bytes.NewReader(config.Body)
 	address := fmt.Sprintf("%s%s", url, config.Path)

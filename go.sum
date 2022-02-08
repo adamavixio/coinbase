@@ -1,3 +1,5 @@
+github.com/adamavixio/logger v0.0.0-20220116014044-9d1fc4a00af6 h1:qfyxDsm5AWfAoPujeoNA/2UDmbM7dwg/hDM0qMXnKWQ=
+github.com/adamavixio/logger v0.0.0-20220116014044-9d1fc4a00af6/go.mod h1:E80U530YkCf7FSm8ln6Xw43HNdpRv3HmcTWZxqeqX3c=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=

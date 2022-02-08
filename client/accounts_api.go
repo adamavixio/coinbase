@@ -1,42 +1,22 @@
-package coinbaseclient
+package client
 
 import (
 	"encoding/json"
 	"fmt"
 )
 
-//
-// Implementation
-//
-
 type Account struct {
-	ID             string `json:"id"`
-	Currency       string `json:"currency"`
-	Balance        string `json:"balance"`
 	Available      string `json:"available"`
+	Balance        string `json:"balance"`
+	Currency       string `json:"currency"`
 	Hold           string `json:"hold"`
+	ID             string `json:"id"`
 	ProfileID      string `json:"profile_id"`
 	TradingEnabled bool   `json:"trading_enabled"`
 }
 
-type AccountByIDConfig struct {
-	ID string `json:"id"`
-}
-
-func (config *AccountByIDConfig) isValid() error {
-	if config.ID == "" {
-		return fmt.Errorf("invalid value for field ID: %s", config.ID)
-	}
-
-	return nil
-}
-
-//
-// API
-//
-
 func Accounts() ([]Account, error) {
-	request := RequestConfig{
+	request := requestConfig{
 		Method: get,
 		Path:   "/accounts",
 	}
@@ -56,28 +36,12 @@ func Accounts() ([]Account, error) {
 	return account, nil
 }
 
-func AccountByCurrency(currency string) (*Account, error) {
-	accounts, err := Accounts()
-	if err != nil {
-		return nil, err
-	}
-
-	for _, account := range accounts {
-		if account.Currency == currency {
-			return &account, nil
-		}
-	}
-
-	return nil, fmt.Errorf("unable to find account ID for USD")
-}
-
 func AccountByID(config *AccountByIDConfig) (*Account, error) {
-	err := config.isValid()
-	if err != nil {
+	if err := config.validate(); err != nil {
 		return nil, err
 	}
 
-	request := RequestConfig{
+	request := requestConfig{
 		Method: get,
 		Path:   fmt.Sprintf("/accounts/%s", config.ID),
 	}
