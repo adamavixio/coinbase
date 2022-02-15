@@ -1,10 +1,10 @@
-package api
+package service
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/adamavixio/coinbase-service/client"
+	"github.com/adamavixio/coinbase/client"
 )
 
 func Buy(productID string, amount float64) error {

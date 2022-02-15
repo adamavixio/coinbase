@@ -1,8 +1,10 @@
 package client
 
+import "math"
+
 func Orders() ([]*Order, error) {
 	config := &GetOrdersConfig{
-		Limit:  10000,
+		Limit:  math.MaxInt64,
 		Status: "done",
 	}
 
